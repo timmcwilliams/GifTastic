@@ -3,138 +3,109 @@
 <head>
   <title>Giffy Stuff</title>
 
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-
- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <!-- <script type="text/javascript" src="assets/JavaScript/giftime.js"></script> -->
 </head>
 <body>
-  <div class="row">
+<!--   <div class="row">
   <div class="col-lg-6">
     <div class="input-group">
       <span class="input-group-btn">
         <button class="btn btn-default" type="button">Go!</button>
       </span>
       <input type="text" class="form-control" placeholder="Search for..." data-search="">
-    </div><!-- /input-group -->
-  </div><!-- /.col-lg-6 -->
-  
-</div><!-- /.row -->
-<div id="buttonAddArea">
+    </div><!-/input-group -->
+    <!--  </div> --> <!-- /.col-lg-6 -->
 
-  <button data-search="Astros">
-  Astros--</button>
-  <button data-search="Dodgers">
-  Dodgers--</button>
-  <button data-search="girls">
-  girls--</button>
-</div>
+  <!-- </div> --><!-- /.row -->
+  <div id="buttonAddArea">
+  </div> 
 
-<div id="gifarea"></div>
+      <form>
+        Enter Topic:
+        <input type="text" id="info">
+        <input type="submit" value="Submit" id="submitButton">
+      </form>
+    <div id="gifarea"></div>
+
+<script type="text/javascript">
+  // Initial topics array
+  var topics =["Astros", "Dodgers", "Girls"];
 
 
-  <!-- boxes go on top -->
-  <script type="text/javascript">
-// alert("hello");
-$("button").on('click',function(){
-  var x = $(this).data("search");
-  
-  var queryURL = "https://api.giphy.com/v1/gifs/search?q=baseball+fights+"+ x + "&api_key=zNvqArk0qbHMbT2HYSHUZAKgPeweOKYo&limit=10";
-    // console.log(queryURL);
-    $.ajax({
-      url: queryURL,
-      method: 'GET'
-    }).done(function(response) {
-      // console.log(response.data[0].embed_url);
-      for (var i = 0; i < response.data.length;i++) {
+  // Dynamically generates buttons from 'topics' array
+      function makeButtons (){
 
-        var sportsDiv = $("<div>");
-        var p= $("<p>").text("Rating: " + response.data[i].rating);
-var sportsImage = $("<img>");
-sportsImage.attr("src",response.data[i].images.fixed_height.url);
-sportsDiv.append(p);
-sportsDiv.append(sportsImage);
-$("#gifarea").prepend(sportsDiv);
+        $("#buttonAddArea").empty();
 
-// .prepend("<img src='"+response.data[i].images.downsized.url+"'>");
-// $("#girarea").prepend("<p> you picked this object "+ response.data[i].embeded_url)
-// $("#gifarea").prepend("<img src='"+response.data[i].images.downsized.url+"'>");
-}
-})
-  })
-//     var queryURL = "https://api.giphy.com/v1/gifs/search?q=baseball+fights+astros+dodgers&api_key=zNvqArk0qbHMbT2HYSHUZAKgPeweOKYo&limit=5";
-// $("button").on("click", function() {
-//       var title = $(this).attr("data-title");
-//       var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-//         title + "&api_key=zNvqArk0qbHMbT2HYSHUZAKgPeweOKYo&limit=10";
-//     $.ajax({
-//       url: queryURL,
-//       method: 'GET'
-//     }).done(function(response) {
-//       console.log(response);
-//   });
-//     // $("#sports-view").html("<h1>" + JSON.stringify(response) + "Sports Details</h1>");// new from Code School
+        for(var i =0; i < topics.length; i++){
 
-// });
-<!-- entry buttons go on side -->
+          var newButton = $("<button>");
+          newButton.text(topics[i]);
+          newButton.attr("data-search", topics[i]);
+
+          $("#buttonAddArea").append(newButton);
+        }
+      }
+
+      makeButtons();  // calls once when page loads
+
+  // Adds user topic input to 'topics' array
+        $("#submitButton").on("click", function(event){
+            event.preventDefault(); //I'll fix this
+            var newTopic = $("#info").val().trim();
+            topics.push(newTopic);
+            makeButtons();
+
+          });
+  // alert("hello");
+        $(document).on('click',"button",function(){
+          $("#gifarea").empty();
+          var x = $(this).data("search");
+          var queryURL = "https://api.giphy.com/v1/gifs/search?q=baseball+fights+"+ x + "&api_key=zNvqArk0qbHMbT2HYSHUZAKgPeweOKYo&limit=10";
+                // console.log(queryURL);
+                $.ajax({
+                  url: queryURL,
+                  method: 'GET'
+                }).done(function(response) {
+                  // console.log(response.data[0].embed_url);
+                  for (var i = 0; i < response.data.length;i++) {
+
+                   var sportsDiv = $("<div>");
+                   var p= $("<p>").text("Rating: " + response.data[i].rating);
+                   var sportsImage = $("<img>");
+                     sportsImage.addClass("gif");
+                     sportsImage.attr("src",response.data[i].images.fixed_height_still.url);
+                     sportsImage.attr("data-animated",response.data[i].images.fixed_height.url );
+                     sportsImage.attr("data-still",response.data[i].images.fixed_height_still.url );
+                     sportsImage.attr("data-state", "still");
+                     sportsDiv.append(p);
+                     sportsDiv.append(sportsImage);
+                   $("#gifarea").prepend(sportsDiv);
+                   }//END for
+                 })// END done
+           })//END button click
+  // Logic to play/pause gifs
+  $(document).on("click", ".gif", function(){
+
+    var state = $(this).attr("data-state");
+    
+        if(state === "still")
+        {
+
+          $(this).attr("src", $(this).attr("data-animated") );
+          $(this).attr("data-state", "animated");
+        }
+        else 
+        {
+          $(this).attr("src", $(this).attr("data-still") );
+          $(this).attr("data-state", "still");
+        }  
+        });
 </script>
-
-<!-- html is minimal -->
-
-
-
-
 </body>
 </html>
-
-
 <!-- # GifTastic
 
-### Overview
-
-In this assignment, you'll use the GIPHY API to make a dynamic web page that populates with gifs of your choice. To finish this task, you must call the GIPHY API and use JavaScript and jQuery to change the HTML of your site.
-
-![GIPHY](Images/1-giphy.jpg)
-
-### Before You Begin
-
-1. **Hit the GIPHY API**.
-   * Fool around with the GIPHY API. [Giphy API](https://github.com/Giphy).
-   * Be sure to read about these GIPHY parameters (hint, hint): 
-     * `q`
-     * `limit`
-     * `rating`
-   * Like many APIs, GIPHY requires developers to use a key to access their API data. For now, you can use their [public API key](https://github.com/Giphy/GiphyAPI#public-beta-key).
-   * Make sure you switch the protocol in the query URL from **`http to https`**, or the app may not work properly when deployed to Github Pages.
-
-2. **[Watch the demo video](homework_demo.mov)**
-
-   * You should have a high-level understanding of how this assignment works before attempting to code it.
-
-### Instructions
-
-1. Before you can make any part of our site work, you need to create an array of strings, each one related to a topic that interests you. Save it to a variable called `topics`. 
-   * We chose animals for our theme, but you can make a list to your own liking.
-
-2. Your app should take the topics in this array and create buttons in your HTML.
-   * Try using a loop that appends a button for each string in the array.
-
-3. When the user clicks on a button, the page should grab 10 static, non-animated gif images from the GIPHY API and place them on the page. 
-
-4. When the user clicks one of the still GIPHY images, the gif should animate. If the user clicks the gif again, it should stop playing.
-
-5. Under every gif, display its rating (PG, G, so on). 
-   * This data is provided by the GIPHY API.
-   * Only once you get images displaying with button presses should you move on to the next step.
-
-6. Add a form to your page takes the value from a user input box and adds it into your `topics` array. Then make a function call that takes each topic in the array remakes the buttons on the page.
-
-7. Deploy your assignment to Github Pages.
-
-8. **Rejoice**! You just made something really cool.
-
- -->
