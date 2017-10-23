@@ -3,17 +3,28 @@
 <head>
   <title>Giffy Stuff</title>
 
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 
- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+ <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 
   <!-- <script type="text/javascript" src="assets/JavaScript/giftime.js"></script> -->
 </head>
 <body>
-
+  <div class="row">
+  <div class="col-lg-6">
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button">Go!</button>
+      </span>
+      <input type="text" class="form-control" placeholder="Search for..." data-search="">
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+  
+</div><!-- /.row -->
+<div id="buttonAddArea">
 
   <button data-search="Astros">
   Astros--</button>
@@ -21,7 +32,11 @@
   Dodgers--</button>
   <button data-search="girls">
   girls--</button>
-  
+</div>
+
+<div id="gifarea"></div>
+
+
   <!-- boxes go on top -->
   <script type="text/javascript">
 // alert("hello");
@@ -36,8 +51,18 @@ $("button").on('click',function(){
     }).done(function(response) {
       // console.log(response.data[0].embed_url);
       for (var i = 0; i < response.data.length;i++) {
-// $("body").append("<p> you picked this object "+ response.data[i].embeded_url)
-$("body").append("<img src='"+response.data[i].images.downsized.url+"'>");
+
+        var sportsDiv = $("<div>");
+        var p= $("<p>").text("Rating: " + response.data[i].rating);
+var sportsImage = $("<img>");
+sportsImage.attr("src",response.data[i].images.fixed_height.url);
+sportsDiv.append(p);
+sportsDiv.append(sportsImage);
+$("#gifarea").prepend(sportsDiv);
+
+// .prepend("<img src='"+response.data[i].images.downsized.url+"'>");
+// $("#girarea").prepend("<p> you picked this object "+ response.data[i].embeded_url)
+// $("#gifarea").prepend("<img src='"+response.data[i].images.downsized.url+"'>");
 }
 })
   })
