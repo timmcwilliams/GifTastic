@@ -2,38 +2,45 @@
 <html>
 <head>
   <title>Giffy Stuff</title>
+
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
- 
-  <!--  <script type="text/javascript" src="assets/JavaScript/giftime.js"></script> -->
+
+
+ <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+
+  <!-- <script type="text/javascript" src="assets/JavaScript/giftime.js"></script> -->
 </head>
 <body>
-<div id="sports-view">
-</div>
-  <div id="buttons">
-    <button data-title="Astros">
-     Astros
-    </button>
-    <button data-title="Dodgers">
-     Dodgers
-    </button>
-<!-- boxes go on top -->
-<script type="text/javascript">
+
+
+  <button data-search="Astros">
+  Astros--</button>
+  <button data-search="Dodgers">
+  Dodgers--</button>
+  <button data-search="girls">
+  girls--</button>
+  
+  <!-- boxes go on top -->
+  <script type="text/javascript">
 // alert("hello");
 $("button").on('click',function(){
-  var x=$(this).data("title");
+  var x = $(this).data("search");
   
-    var queryURL = "https://api.giphy.com/v1/gifs/search?q=baseball+fights"+ x + "&api_key=zNvqArk0qbHMbT2HYSHUZAKgPeweOKYo&limit=5";
+  var queryURL = "https://api.giphy.com/v1/gifs/search?q=baseball+fights+"+ x + "&api_key=zNvqArk0qbHMbT2HYSHUZAKgPeweOKYo&limit=10";
     // console.log(queryURL);
-      $.ajax({
+    $.ajax({
       url: queryURL,
       method: 'GET'
     }).done(function(response) {
-      console.log(response.data[0].embed_url);
-$("body").append("<p> you picked this object "+response.data[0].embeded_url)
-$("body").append("<img src='" +response.data[0].images.downsized.url+"'>");
-
+      // console.log(response.data[0].embed_url);
+      for (var i = 0; i < response.data.length;i++) {
+// $("body").append("<p> you picked this object "+ response.data[i].embeded_url)
+$("body").append("<img src='"+response.data[i].images.downsized.url+"'>");
+}
 })
-})
+  })
 //     var queryURL = "https://api.giphy.com/v1/gifs/search?q=baseball+fights+astros+dodgers&api_key=zNvqArk0qbHMbT2HYSHUZAKgPeweOKYo&limit=5";
 // $("button").on("click", function() {
 //       var title = $(this).attr("data-title");
