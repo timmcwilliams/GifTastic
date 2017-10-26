@@ -10,69 +10,59 @@
   <link rel="stylesheet" type="text/css" href="assets/css/GifTastic.css">
 </head>
 <body>
-<!--   <div class="row">
-  <div class="col-lg-6">
-    <div class="input-group">
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button">Go!</button>
-      </span>
-      <input type="text" class="form-control" placeholder="Search for..." data-search="">
-    </div><!-/input-group -->
-    <!--  </div> --> <!-- /.col-lg-6 -->
 
-  <!-- </div> --><!-- /.row -->
   <div id="buttonAddArea">
     <br>
   </div> 
 
-      <form>
-        Enter Topic:
-        <input type="text" id="info">
-        <input type="submit" value="Submit" id="submitButton">
-        <input type="reset">
-      </form>
-    <div id="gifarea"></div>
+  <form>
+    Enter Topic:
+    <input type="text" id="info">
+    <input type="submit" value="Submit" id="submitButton">
+    <input type="reset">
+  </form>
+  <br>
+  <div id="gifarea"></div>
 
-<script type="text/javascript">
+  <script type="text/javascript">
   // Initial topics array
   var topics =["Astros", "Dodgers", "Homerun"];
 
 
   // Dynamically generates buttons from 'topics' array
-      function makeButtons (){
+  function makeButtons (){
 
-        $("#buttonAddArea").empty();
+    $("#buttonAddArea").empty();
 
-        for(var i =0; i < topics.length; i++){
+    for(var i =0; i < topics.length; i++){
 
-          var newButton = $("<button>");
-          newButton.text(topics[i]);
-          newButton.attr("data-search", topics[i]).css({"background-color": "yellow", "font-size": "100%","font-family": "fantasy" });
+      var newButton = $("<button>");
+      // $("newButton").append(newButton).css("background-color", "red");
+      newButton.text(topics[i]);
+      newButton.attr("data-search", topics[i]).css({"background-color": "pink", "font-size": "100%","font-family": "fantasy" });
 
-          $("#buttonAddArea").append(newButton).css("background-color", "red");
-
-
-        }
-      }
+      $("#buttonAddArea").append(newButton).css("background-color", "red");
+    }
+  }
 
       makeButtons();  // calls once when page loads - got help from tutor on this one. 
 
   // Adds user topic input to 'topics' array
-        $("#submitButton").on("click", function(event){
-            event.preventDefault(); 
-            var newTopic = $("#info").val().trim();
+  $("#submitButton").on("click", function(event){
+    event.preventDefault(); 
+    var newTopic = $("#info").val().trim();
 
-            topics.push(newTopic);
-            makeButtons();
+    topics.push(newTopic);
+    makeButtons();
 
 
 
-          });
+  });
   // alert("hello");
-        $(document).on('click',"button",function(){
-          $("#gifarea").empty();
-          var x = $(this).data("search");
-          var queryURL = "https://api.giphy.com/v1/gifs/search?q=baseball+fights+"+ x +"&api_key=zNvqArk0qbHMbT2HYSHUZAKgPeweOKYo&limit=6";
+  $(document).on('click',"button",function(){
+    // $("#gifarea").empty();
+    var x = $(this).data("search");
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=baseball+fights+"+ x +"&api_key=zNvqArk0qbHMbT2HYSHUZAKgPeweOKYo&limit=20";
                 // console.log(queryURL);
                 $.ajax({
                   url: queryURL,
@@ -84,35 +74,35 @@
                    var sportsDiv = $("<div>");
                    var p= $("<p>").text("Rating: " + response.data[i].rating);
                    var sportsImage = $("<img>");
-                     sportsImage.addClass("gif");
-                     sportsImage.attr("src",response.data[i].images.fixed_height_still.url);
-                     sportsImage.attr("data-animated",response.data[i].images.fixed_height.url);
-                     sportsImage.attr("data-still",response.data[i].images.fixed_height_still.url );
-                     sportsImage.attr("data-state", "still");
-                     sportsDiv.append(p);
-                     sportsDiv.append(sportsImage);
-                   $("#gifarea").prepend(sportsDiv); /*not working*/
+                   sportsImage.addClass("gif");
+                   sportsImage.attr("src",response.data[i].images.fixed_height_still.url);
+                   sportsImage.attr("data-animated",response.data[i].images.fixed_height.url);
+                   sportsImage.attr("data-still",response.data[i].images.fixed_height_still.url );
+                   sportsImage.attr("data-state", "still");
+                   sportsDiv.append(p);
+                   sportsDiv.append(sportsImage);
+                   $("#gifarea").prepend(sportsDiv); /*not working how I wanted*/
                    }//END for
                  })// END done
            })//END button click
   // Logic to play/pause gifs
   $(document).on("click", ".gif", function(){
- 
+
 
     var state = $(this).attr("data-state");
     
-        if(state === "still")
-        {
+    if(state === "still")
+    {
 
-          $(this).attr("src", $(this).attr("data-animated") );
-          $(this).attr("data-state", "animated");
-        }
-        else 
-        {
-          $(this).attr("src", $(this).attr("data-still") );
-          $(this).attr("data-state", "still");
-        }  
-        });
+      $(this).attr("src", $(this).attr("data-animated") );
+      $(this).attr("data-state", "animated");
+    }
+    else 
+    {
+      $(this).attr("src", $(this).attr("data-still") );
+      $(this).attr("data-state", "still");
+    }  
+  });
 </script>
 </body>
 </html>
